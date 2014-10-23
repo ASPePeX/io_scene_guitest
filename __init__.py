@@ -52,13 +52,13 @@ from bpy_extras.io_utils import (ExportHelper,
 class ExportOBJ(bpy.types.Operator, ExportHelper):
     """Save a Wavefront OBJ File"""
 
-    bl_idname = "export_scene.obj"
-    bl_label = 'Export OBJ'
+    bl_idname = "export_scene.fus"
+    bl_label = 'Export FUS'
     bl_options = {'PRESET'}
 
-    filename_ext = ".obj"
+    filename_ext = ".fus"
     filter_glob = StringProperty(
-            default="*.obj;*.mtl",
+            default="*.fus",
             options={'HIDDEN'},
             )
 
@@ -70,7 +70,7 @@ class ExportOBJ(bpy.types.Operator, ExportHelper):
             )
     use_animation = BoolProperty(
             name="Animation",
-            description="Write out an OBJ for each frame",
+            description="Write out an FUS for each frame",
             default=False,
             )
 
@@ -132,12 +132,12 @@ class ExportOBJ(bpy.types.Operator, ExportHelper):
 
     # grouping group
     use_blen_objects = BoolProperty(
-            name="Objects as OBJ Objects",
+            name="Objects as FUS Objects",
             description="",
             default=True,
             )
     group_by_object = BoolProperty(
-            name="Objects as OBJ Groups ",
+            name="Objects as FUS Groups ",
             description="",
             default=False,
             )
