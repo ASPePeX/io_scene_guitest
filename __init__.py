@@ -48,7 +48,13 @@ class Bla(bpy.types.Operator):
         scene = context.scene
         cursor = scene.cursor_location
         obj = scene.objects.active
-
+		
+        if self.total > 10:
+            self.report({'INFO'}, "Total is %d" % (self.total))
+		
+        if self.total > 15:
+            bpy.ops.object.dialog_operator('INVOKE_DEFAULT')
+		
         for i in range(self.total):
             obj_new = obj.copy()
             scene.objects.link(obj_new)
@@ -57,6 +63,27 @@ class Bla(bpy.types.Operator):
             obj_new.location = (obj.location * factor) + (cursor * (1.0 - factor))
 
         return {'FINISHED'}
+
+
+#http://www.blender.org/api/blender_python_api_2_73a_release/bpy.types.Operator.html#dialog-box
+class DialogOperator(bpy.types.Operator):
+    bl_idname = "object.dialog_operator"
+    bl_label = "Simple Dialog Operator"
+
+    my_float = bpy.props.FloatProperty(name="Some Floating Point")
+    my_bool = bpy.props.BoolProperty(name="Toggle Option")
+    my_string = bpy.props.StringProperty(name="String Value")
+
+    def execute(self, context):
+        message = "Popup Values: %f, %d, '%s'" % \
+            (self.my_float, self.my_bool, self.my_string)
+        self.report({'INFO'}, message)
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
 
 def menu_func(self, context):
     self.layout.operator(Bla.bl_idname)
@@ -67,8 +94,10 @@ addon_keymaps = []
 
 def register():
     bpy.utils.register_class(Bla)
+    bpy.utils.register_class(DialogOperator)
     bpy.types.VIEW3D_MT_view.append(menu_func)
     bpy.types.VIEW3D_MT_object.append(menu_func)
+	
 
     # handle the keymap
     wm = bpy.context.window_manager
@@ -92,6 +121,7 @@ def unregister():
 	#bpy.utils.unregister_class(BasicMenu)
     bpy.types.VIEW3D_MT_view.remove(menu_func)
     bpy.types.VIEW3D_MT_object.remove(menu_func)
+    bpy.utils.unregister_class(DialogOperator)
     bpy.utils.unregister_class(Bla)
 
 
